@@ -1,6 +1,11 @@
 <?php
 include "koneksi.php";
 
+// Periksa apakah koneksi berhasil
+if (!$koneksi) {
+    die("Koneksi gagal: " . mysqli_connect_error());
+}
+
 if(isset($_POST['submit'])) {
     $nis = $_POST['nis'];
     $nama = $_POST['nama_siswa'];
@@ -10,10 +15,17 @@ if(isset($_POST['submit'])) {
     $id_kelas = $_POST['id_kelas'];
     $id_wali = $_POST['id_wali'];
 
+    // Query untuk memasukkan data
     $query = "INSERT INTO siswa (nis, nama_siswa, jenis_kelamin, tempat_lahir, tanggal_lahir, id_kelas, id_wali) 
-              VALUES ('$nis', '$nama', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$id_kelas', '$id_wali' )";
-    mysqli_query($koneksi, $query);
-    header('Location: index.php');
+              VALUES ('$nis', '$nama', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$id_kelas', '$id_wali')";
+
+    // Jalankan query dan periksa apakah berhasil
+    if(mysqli_query($koneksi, $query)) {
+        header('Location: index.php'); // Redirect setelah berhasil
+        exit();
+    } else {
+        echo "Error: " . mysqli_error($koneksi);
+    }
 }
 ?>
 
@@ -31,21 +43,21 @@ if(isset($_POST['submit'])) {
     <div class="container mt-4">
         <h2>Tambah Siswa</h2>
         
-        <form method="POST" onsubmit="return validateForm()">
-        <div class="mb-3">
-                <label for="NIS" class="form-label">NIS</label>
-                <input type="text" name="NIS" id="NIS" class="form-control" required>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="nis" class="form-label">NIS</label>
+                <input type="text" name="nis" id="nis" class="form-control" required>
             </div>
             <div class="mb-3">
-                <label for="nama" class="form-label">Nama</label>
-                <input type="text" name="nama" id="nama" class="form-control" required>
+                <label for="nama_siswa" class="form-label">Nama</label>
+                <input type="text" name="nama_siswa" id="nama_siswa" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
                 <select name="jenis_kelamin" id="jenis_kelamin" class="form-control" required>
                     <option value="">Pilih Jenis Kelamin</option>
-                    <option value="Laki-laki">Laki-laki</option>
-                    <option value="Perempuan">Perempuan</option>
+                    <option value="L">Laki-laki</option>
+                    <option value="P">Perempuan</option>
                 </select>
             </div>
             <div class="mb-3">
@@ -61,10 +73,8 @@ if(isset($_POST['submit'])) {
                 <select name="id_kelas" id="id_kelas" class="form-control" required>
                     <option value="">Pilih Kelas</option>
                     <?php 
-                    // Pastikan $koneksi sudah terkoneksi ke database
                     $query = "SELECT * FROM kelas"; 
                     $kelas_result = mysqli_query($koneksi, $query);
-
                     while ($kelas = mysqli_fetch_assoc($kelas_result)) : ?>
                         <option value="<?php echo $kelas['id_kelas']; ?>">
                             <?php echo $kelas['nama_kelas']; ?>
@@ -78,10 +88,8 @@ if(isset($_POST['submit'])) {
                 <select name="id_wali" id="id_wali" class="form-control" required>
                     <option value="">Pilih Wali Murid</option>
                     <?php 
-                    // Pastikan $koneksi sudah terkoneksi ke database
                     $query = "SELECT * FROM wali_murid"; 
                     $wali_result = mysqli_query($koneksi, $query);
-
                     while ($wali = mysqli_fetch_assoc($wali_result)) : ?>
                         <option value="<?php echo $wali['id_wali']; ?>">
                             <?php echo $wali['nama_wali']; ?>
@@ -90,7 +98,7 @@ if(isset($_POST['submit'])) {
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-success">Tambah siswa</button>
+            <button type="submit" name="submit" class="btn btn-success">Tambah Siswa</button>
             <a href="index.php" class="btn btn-primary">Kembali</a>
         </form>
     </div>

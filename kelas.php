@@ -60,6 +60,7 @@ $result = mysqli_query($koneksi, $query);
                 <?php endwhile; ?>
             </tbody>
         </table>
+        
         <!-- Pagination -->
         <nav>
             <ul class="pagination">
