@@ -1,22 +1,18 @@
 <?php
 include 'koneksi.php';
 
-// Pencarian
 $search = isset($_GET['search']) ? mysqli_real_escape_string($koneksi, $_GET['search']) : '';
 $search_query = ($search != '') ? "WHERE nama_kelas LIKE '%$search%'" : '';
 
-// Pagination
-$limit = 5; // Jumlah data per halaman
+$limit = 5; 
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
-// Hitung total data
 $total_query = "SELECT COUNT(*) AS total FROM kelas $search_query";
 $total_result = mysqli_query($koneksi, $total_query);
 $total_row = mysqli_fetch_assoc($total_result);
 $total_pages = ceil($total_row['total'] / $limit);
 
-// Ambil data kelas dengan pagination
 $query = "SELECT * FROM kelas $search_query LIMIT $limit OFFSET $offset";
 $result = mysqli_query($koneksi, $query);
 ?>
@@ -54,12 +50,30 @@ $result = mysqli_query($koneksi, $query);
                         <td><?php echo $row['nama_kelas']; ?></td>
                         <td>
                             <a href="edit_kelas.php?id=<?php echo $row['id_kelas']; ?>" class="btn btn-warning btn-sm">Edit</a>
-                            <a href="hapus_kelas.php?id=<?php echo $row['id_kelas']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus?');">Hapus</a>
+                            <a href="#" class="btn btn-danger btn-sm delete-button" data-id="<?php echo $row['id_kelas']; ?>" data-name="<?php echo $row['nama_kelas']; ?>" data-delete-url="hapus_kelas.php" >Hapus</a>
                         </td>
                     </tr>
                 <?php endwhile; ?>
             </tbody>
         </table>
+
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Apakah Anda yakin ingin menghapus data <b id="deleteItemName"></b>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <a href="#" id="confirmDelete" class="btn btn-danger">Hapus</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <!-- Pagination -->
         <nav>
@@ -72,6 +86,30 @@ $result = mysqli_query($koneksi, $query);
             </ul>
         </nav>
     </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let deleteButtons = document.querySelectorAll(".delete-button"); 
+            let deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
+            let confirmDelete = document.getElementById("confirmDelete");
+            let deleteItemName = document.getElementById("deleteItemName");
+
+            deleteButtons.forEach(button => {
+                button.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    let itemId = this.getAttribute("data-id"); // ID yang akan dihapus
+                    let itemName = this.getAttribute("data-name"); // Nama item yang akan dihapus
+                    let deleteUrl = this.getAttribute("data-delete-url"); // URL untuk hapus
+
+                    deleteItemName.innerText = itemName; // Menampilkan nama di modal
+                    confirmDelete.setAttribute("href", deleteUrl + "?delete=" + itemId); // Atur URL hapus
+
+                    deleteModal.show();
+                });
+            });
+        });
+
+    </script>
 </body>
 </html>
