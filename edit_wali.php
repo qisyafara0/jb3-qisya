@@ -34,11 +34,11 @@ if(isset($_POST['update'])) {
         <form method="POST" onsubmit="return validateForm()">
         <div class="mb-3">
                 <label for="nama_wali" class="form-label">Nama Wali Murid</label>
-                <input type="text" name="nama_wali" class="form-control" id="nama_wali"  required>
+                <input type="text" name="nama_wali" class="form-control" value="<?php echo $row['nama_wali']; ?>" required>
             </div>
             <div class="mb-3">
                 <label for="kontak" class="form-label">Nomer Telepon</label>
-                <input type="text" name="kontak" class="form-control" id="kontak"  required>
+                <input type="text" name="kontak" class="form-control" value="<?php echo $row['kontak']; ?>" required>
             </div>
 
             <button type="update" name="update" class="btn btn-primary">Update</button>
