@@ -44,6 +44,7 @@ $result = mysqli_query($koneksi, $query);
         <table class="table table-bordered">
             <thead class="table-dark">
                 <tr>
+                    <th>ID Wali</th>
                     <th>Nama Wali</th>
                     <th>No. Telepon</th>
                     <th>Aksi</th>
@@ -52,6 +53,7 @@ $result = mysqli_query($koneksi, $query);
             <tbody>
                 <?php while ($row = mysqli_fetch_assoc($result)) : ?>
                 <tr>
+                    <td><?php echo $row['id_wali']; ?></td>
                     <td><?php echo $row['nama_wali']; ?></td>
                     <td><?php echo $row['kontak']; ?></td>
                     <td>
