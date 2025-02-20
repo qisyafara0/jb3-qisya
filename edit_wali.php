@@ -2,7 +2,7 @@
 include 'koneksi.php';
 
 $id = $_GET['id'];
-$query = "SELECT * FROM wali WHERE id_wali=$id";
+$query = "SELECT * FROM wali_murid WHERE id_wali=$id";
 $result = mysqli_query($koneksi, $query);
 $row = mysqli_fetch_assoc($result);
 
