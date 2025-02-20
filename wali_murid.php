@@ -1,21 +1,20 @@
 <?php
 include 'koneksi.php';
 
-$search = isset($_GET['search']) ? $_GET['search'] : "";
 
-$limit = 5;
+$search = isset($_GET['search']) ? mysqli_real_escape_string($koneksi, $_GET['search']) : '';
+$search_query = ($search != '') ? "WHERE nama_wali LIKE '%$search%'" : '';
+
+$limit = 5; 
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$start = ($page - 1) * $limit;
+$offset = ($page - 1) * $limit;
 
-$total_query = "SELECT COUNT(*) AS total FROM wali_murid";
-if (!empty($search)) { $total_query .= " WHERE nama_wali LIKE '%$search%'"; }
+$total_query = "SELECT COUNT(*) AS total FROM wali_murid $search_query";
 $total_result = mysqli_query($koneksi, $total_query);
 $total_row = mysqli_fetch_assoc($total_result);
 $total_pages = ceil($total_row['total'] / $limit);
 
-$query = "SELECT * FROM wali_murid";
-if (!empty($search)) { $query .= " WHERE nama_wali LIKE '%$search%'"; }
-$query .= " LIMIT $start, $limit";
+$query = "SELECT * FROM wali_murid $search_query LIMIT $limit OFFSET $offset";
 $result = mysqli_query($koneksi, $query);
 
 ?>
@@ -59,6 +58,7 @@ $result = mysqli_query($koneksi, $query);
                     <td>
                         <a href="edit_wali.php?id=<?php echo $row['id_wali']; ?>" class="btn btn-warning btn-sm">Edit</a>
                         <a href="#" class="btn btn-danger btn-sm delete-button" data-id="<?php echo $row['id_wali']; ?>" data-name="<?php echo $row['nama_wali']; ?>" data-delete-url="hapus_wali.php"> Hapus </a>
+                        
                     </td>
                 </tr>
                 <?php endwhile; ?>

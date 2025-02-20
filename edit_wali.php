@@ -2,7 +2,7 @@
 include 'koneksi.php';
 
 $id = $_GET['id'];
-$query = "INSERT INTO wali_murid (nama_wali, kontak) VALUES ('$nama', '$kontak')";
+$query = "SELECT * FROM kelas WHERE id_kelas=$id";
 $result = mysqli_query($koneksi, $query);
 $row = mysqli_fetch_assoc($result);
 
