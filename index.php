@@ -1,19 +1,9 @@
 <?php
 include 'koneksi.php';
 
-$limit = 5; 
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$offset = ($page - 1) * $limit;
-
-$total_query = "SELECT COUNT(*) AS total FROM kelas";
-$total_result = mysqli_query($koneksi, $total_query);
-$total_row = mysqli_fetch_assoc($total_result);
-$total_pages = ceil($total_row['total'] / $limit);
-
 $query = "SELECT siswa.*, kelas.nama_kelas, wali_murid.nama_wali FROM siswa
            LEFT JOIN kelas ON siswa.id_kelas = kelas.id_kelas
-           LEFT JOIN wali_murid ON siswa.id_wali = wali_murid.id_wali 
-           LIMIT $limit OFFSET $offset";
+           LEFT JOIN wali_murid ON siswa.id_wali = wali_murid.id_wali";
 $result = mysqli_query($koneksi, $query);
 
 ?>
@@ -85,16 +75,6 @@ $result = mysqli_query($koneksi, $query);
                 </div>
             </div>
         </div>
-
-        <nav>
-            <ul class="pagination">
-                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                    <li class="page-item <?php if ($page == $i) echo 'active'; ?>">
-                        <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
-                    </li>
-                <?php endfor; ?>
-            </ul>
-        </nav>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>

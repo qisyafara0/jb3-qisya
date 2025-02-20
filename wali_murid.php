@@ -5,16 +5,7 @@ include 'koneksi.php';
 $search = isset($_GET['search']) ? mysqli_real_escape_string($koneksi, $_GET['search']) : '';
 $search_query = ($search != '') ? "WHERE nama_wali LIKE '%$search%'" : '';
 
-$limit = 10; 
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$offset = ($page - 1) * $limit;
-
-$total_query = "SELECT COUNT(*) AS total FROM wali_murid $search_query";
-$total_result = mysqli_query($koneksi, $total_query);
-$total_row = mysqli_fetch_assoc($total_result);
-$total_pages = ceil($total_row['total'] / $limit);
-
-$query = "SELECT * FROM wali_murid $search_query LIMIT $limit OFFSET $offset";
+$query = "SELECT * FROM wali_murid $search_query";
 $result = mysqli_query($koneksi, $query);
 
 ?>
@@ -83,17 +74,6 @@ $result = mysqli_query($koneksi, $query);
                 </div>
             </div>
         </div>
-
-
-        <nav>
-            <ul class="pagination">
-                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                    <li class="page-item <?php if ($page == $i) echo 'active'; ?>">
-                        <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
-                    </li>
-                <?php endfor; ?>
-            </ul>
-        </nav>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
