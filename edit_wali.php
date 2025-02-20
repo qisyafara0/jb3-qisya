@@ -7,12 +7,12 @@ $result = mysqli_query($koneksi, $query);
 $row = mysqli_fetch_assoc($result);
 
 if(isset($_POST['update'])) {
-    $nama = $_POST['nama_wali'];
+    $nama_wali = $_POST['nama_wali'];
     $kontak = $_POST['kontak'];
 
     $query = "UPDATE wali_murid SET 
-              nama_wali='$nama',
-              kontak='$kontak',
+              nama_wali='$nama_wali',
+              kontak='$kontak'
               WHERE id_wali=$id";
     mysqli_query($koneksi, $query);
     header('Location: wali_murid.php');
