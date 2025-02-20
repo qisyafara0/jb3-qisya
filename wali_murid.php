@@ -5,7 +5,7 @@ include 'koneksi.php';
 $search = isset($_GET['search']) ? mysqli_real_escape_string($koneksi, $_GET['search']) : '';
 $search_query = ($search != '') ? "WHERE nama_wali LIKE '%$search%'" : '';
 
-$limit = 5; 
+$limit = 10; 
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
